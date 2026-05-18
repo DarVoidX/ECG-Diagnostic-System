@@ -2,6 +2,17 @@
 
 An advanced, production-grade Electrocardiography (ECG) Diagnostic System built to classify heart conditions using deep learning. This system processes raw ECG data from the PTB-XL dataset and visualizes the AI's diagnostic reasoning through a stunning Liquid Glass interface.
 
+## 📸 Application Interface
+
+*(Drag and drop your screenshots over the placeholder links below when editing on GitHub!)*
+<p align="center">
+  <img src="https://via.placeholder.com/800x400.png?text=Drag+and+Drop+Your+Landing+Page+Screenshot+Here" alt="ECG System Landing Page" width="800"/>
+</p>
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x400.png?text=Drag+and+Drop+Your+Results+Page+Screenshot+Here" alt="ECG Diagnostic Results" width="800"/>
+</p>
+
 ## ✨ Key Features
 
 - **Hybrid AI Architecture:** Utilizes a Hybrid CNN-BiLSTM (Convolutional Neural Network + Bidirectional LSTM) designed in PyTorch to capture both spatial and temporal features of ECG waves.
