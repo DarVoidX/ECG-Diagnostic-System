@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="CARDIO.AI — Neural ECG Classification System. AI-powered 12-lead ECG diagnostics with Hybrid CNN-BiLSTM.">
+    <title>CARDIO.AI — Neural ECG Classification</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,700;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         NAVIGATION
+         ═══════════════════════════════════════════════════════════════ -->
+    <nav class="nav" id="main-nav">
+        <div class="logo">CARDIO.AI</div>
+        <div class="nav-links">
+            <button class="nav-link active" id="nav-home">Home</button>
+            <button class="nav-link" id="nav-analysis">Analysis</button>
+            <button class="nav-link" id="nav-system">System</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+            <div class="status-indicator">
+                <span class="status-dot"></span> ACTIVE
+            </div>
+            <div class="theme-toggle" id="theme-toggle">
+                <span class="theme-toggle-option" id="theme-dark-label">DARK THEME</span>
+                <span class="theme-toggle-option active" id="theme-light-label">COLOR THEME</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <header class="hero" id="hero-view">
+        <div class="scanline-overlay"></div>
+        <canvas id="hero-bg-canvas"></canvas>
+
+        <img src="heart.png" alt="" class="hero-heart-bg heart-dark">
+        <img src="heart colour.png" alt="" class="hero-heart-bg heart-light">
+
+        <div class="hero-grid">
+            <div class="hero-text-col">
+                <h1 class="huge-title">
+                    <span class="line line-italic">NEURAL</span>
+                    <span class="line line-italic">ECG</span>
+                    <span class="line line-outline">CLASSI&shy;</span>
+                    <span class="line line-bold">FICATION.</span>
+                </h1>
+                <div class="hero-sub-text">
+                    <p>AI-POWERED 12-LEAD ECG CLASSIFICATION USING HYBRID CNN-BILSTM ARCHITECTURE WITH 970K PARAMETERS.
+                        UPLOAD ANY PTB-XL COMPATIBLE RECORDING FOR INSTANT DIAGNOSIS.</p>
+                </div>
+            </div>
+
+            <div class="hero-info-col">
+                <!-- Video Background — Dark theme (autoplay, default active) -->
+                <video class="hero-video video-bg" id="video-dark" autoplay muted loop playsinline preload="auto">
+                    <source src="baground moveing.mp4" type="video/mp4">
+                </video>
+                <!-- Video Background — Color theme (starts paused, played on theme switch) -->
+                <video class="hero-video video-bg" id="video-light" muted loop playsinline preload="none">
+                    <source src="colour.mp4" type="video/mp4">
+                </video>
+                <div class="hero-video-overlay"></div>
+
+                <div class="info-grid">
+                    <div class="info-block bordered">
+                        <div class="info-block-label">VERSION</div>
+                        <div class="info-block-value">2.0</div>
+                    </div>
+                    <div class="info-block bordered">
+                        <div class="info-block-label">DATASET</div>
+                        <div class="info-block-value-list">
+                            <span>· PTB-XL v1.0.3</span>
+                            <span>· 21,837 Records</span>
+                            <span>· 12-Lead · 500Hz</span>
+                        </div>
+                    </div>
+                    <div class="info-block bordered">
+                        <div class="info-block-label">ARCHITECTURE</div>
+                        <div class="info-block-value-list">
+                            <span>· Hybrid CNN-BiLSTM</span>
+                            <span>· 970K Parameters</span>
+                            <span>· GPU Accelerated</span>
+                        </div>
+                    </div>
+                    <div class="info-block bordered">
+                        <div class="info-block-label">DIAGNOSTIC CLASSES</div>
+                        <div class="info-block-value">5</div>
+                    </div>
+                </div>
+
+                <div class="live-feed-block">
+                    <div class="feed-label">SYSTEM STATUS —</div>
+                    <p class="feed-text" id="hero-ai-status">Neural engine ready. Awaiting ECG input for classification.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Action Strip -->
+        <div class="upload-strip">
+            <!-- Footer ECG Moving Animation (Background) -->
+            <div class="hero-footer-ecg">
+                <canvas id="footer-ecg-canvas"></canvas>
+            </div>
+            
+            <div class="upload-strip-left">
+                <h2 class="upload-strip-title">UPLOAD<br>ECG</h2>
+                <p class="upload-strip-desc">SELECT .HEA FILE FIRST, THEN .DAT FILE</p>
+                <p class="upload-file-status" id="upload-file-status"></p>
+            </div>
+            <div class="upload-strip-right">
+                <button class="circle-cta" id="upload-btn" aria-label="Upload ECG file">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
+                </button>
+                <span class="upload-cta-label" id="upload-cta-label">SELECT .HEA</span>
+            </div>
+            <input type="file" id="file-input-hea" accept=".hea" hidden>
+            <input type="file" id="file-input-dat" accept=".dat" hidden>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         RESULTS SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <main class="results" id="results-view" style="display: none;">
+        <!-- Top Bar -->
+        <div class="results-topbar">
+            <button class="back-link" id="back-btn">← BACK TO HOME</button>
+            <div class="results-topbar-right">
+                <button class="download-btn" id="download-report-btn" title="Download ECG Report">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    DOWNLOAD REPORT
+                </button>
+                <span class="record-badge" id="record-id">RECORD 00000</span>
+                <span class="results-timestamp" id="results-timestamp"></span>
+            </div>
+        </div>
+
+        <!-- Diagnosis Banner -->
+        <section class="diag-banner" id="diag-banner">
+            <div class="diag-banner-left">
+                <div class="diag-label">AI DIAGNOSIS</div>
+                <h2 class="diag-title" id="diag-title">ANALYZING</h2>
+            </div>
+            <div class="diag-banner-right">
+                <div class="diag-conf-block">
+                    <span class="diag-conf-value" id="diag-conf">--%</span>
+                    <span class="diag-conf-label">CONFIDENCE</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-strip">
+            <div class="metric-block bordered">
+                <div class="metric-label">HEART RATE</div>
+                <div class="metric-value" id="metric-hr">--</div>
+                <div class="metric-unit">BPM</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">PR INTERVAL</div>
+                <div class="metric-value" id="metric-pr">--</div>
+                <div class="metric-unit">MS</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">QRS DURATION</div>
+                <div class="metric-value" id="metric-qrs">--</div>
+                <div class="metric-unit">MS</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">RR INTERVAL</div>
+                <div class="metric-value" id="metric-rr">--</div>
+                <div class="metric-unit">MS</div>
+            </div>
+        </section>
+
+        <!-- ECG Trace with Explainable AI -->
+        <section class="explain-section">
+            <div class="explain-main">
+                <div class="section-header">
+                    <h3>ECG TRACE — LEAD <span id="current-lead-label">II</span></h3>
+                    <div class="lead-selector" id="lead-selector"></div>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="ecg-main-chart"></canvas>
+                </div>
+                <!-- Legend matching old style -->
+                <div class="ecg-legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> P-Wave</div>
+                    <div class="legend-item"><span class="legend-dot tri" style="background:#f59e0b"></span> R-Peak
+                    </div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span> T-Wave</div>
+                    <div class="legend-item"><span class="legend-dot sq" style="background:#ef4444"></span> QRS Complex
+                    </div>
+                </div>
+            </div>
+            <aside class="explain-sidebar">
+                <div class="sidebar-block">
+                    <div class="sidebar-label">SIGNAL ANALYSIS</div>
+                    <div class="human-readable-text" id="human-explanation">
+                        Processing signal for anomalies...
+                    </div>
+                </div>
+                <div class="sidebar-block">
+                    <div class="sidebar-label">DETECTED MARKERS</div>
+                    <ul class="anomaly-list" id="anomaly-list"></ul>
+                </div>
+            </aside>
+        </section>
+
+        <!-- Class Probabilities -->
+        <section class="prob-section">
+            <div class="section-header">
+                <h3>CLASS PROBABILITIES</h3>
+            </div>
+            <div class="prob-grid" id="prob-list"></div>
+        </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SYSTEM INFO PANEL
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="system-view" id="system-view" style="display: none;">
+        <div class="results-topbar">
+            <button class="back-link" id="system-back-btn">← BACK TO HOME</button>
+            <span class="record-badge">SYSTEM INFO</span>
+        </div>
+
+        <section class="diag-banner">
+            <div class="diag-banner-left">
+                <div class="diag-label">NEURAL ENGINE</div>
+                <h2 class="diag-title">CARDIO.AI v2.0</h2>
+            </div>
+            <div class="diag-banner-right">
+                <div class="diag-conf-block">
+                    <span class="diag-conf-value">970K</span>
+                    <span class="diag-conf-label">PARAMETERS</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Info -->
+        <section class="metrics-strip">
+            <div class="metric-block bordered">
+                <div class="metric-label">MODEL</div>
+                <div class="metric-value" style="font-size:1.4rem">CNN-BiLSTM</div>
+                <div class="metric-unit">HYBRID</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">DATASET</div>
+                <div class="metric-value" style="font-size:1.4rem">PTB-XL</div>
+                <div class="metric-unit">21,837 RECORDS</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">SAMPLING</div>
+                <div class="metric-value">500</div>
+                <div class="metric-unit">HZ</div>
+            </div>
+            <div class="metric-block bordered">
+                <div class="metric-label">LEADS</div>
+                <div class="metric-value">12</div>
+                <div class="metric-unit">STANDARD</div>
+            </div>
+        </section>
+
+        <!-- Pipeline & Classes -->
+        <section class="explain-section">
+            <div class="explain-main">
+                <div class="section-header">
+                    <h3>PROCESSING PIPELINE</h3>
+                </div>
+                <div class="system-pipeline">
+                    <div class="pipeline-step">
+                        <div class="pipeline-num">01</div>
+                        <div class="pipeline-detail">
+                            <strong>PREPROCESSING</strong>
+                            <p>Bandpass filtering (0.5–40Hz), baseline wander removal, EMD denoising, Z-score
+                                normalization</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="pipeline-num">02</div>
+                        <div class="pipeline-detail">
+                            <strong>FEATURE EXTRACTION</strong>
+                            <p>Morphological features (R-peaks, P/T waves, QRS), FFT spectral analysis, DWT wavelet
+                                decomposition (db4, 5 levels)</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="pipeline-num">03</div>
+                        <div class="pipeline-detail">
+                            <strong>CNN BRANCH</strong>
+                            <p>3 Conv1D layers [64→128→256 channels] with BatchNorm + ReLU + MaxPool → Global Average
+                                Pooling → 256-dim vector</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="pipeline-num">04</div>
+                        <div class="pipeline-detail">
+                            <strong>BiLSTM BRANCH</strong>
+                            <p>2-layer Bidirectional LSTM (hidden=128) capturing temporal dependencies → 256-dim vector
+                                (128×2 directions)</p>
+                        </div>
+                    </div>
+                    <div class="pipeline-step">
+                        <div class="pipeline-num">05</div>
+                        <div class="pipeline-detail">
+                            <strong>CLASSIFICATION</strong>
+                            <p>Feature fusion (CNN+BiLSTM → 512-dim) → Dense(128) → Dropout(0.5) → Softmax → 5-class
+                                output</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="explain-sidebar">
+                <div class="sidebar-block">
+                    <div class="sidebar-label">5 DIAGNOSTIC CLASSES</div>
+                    <ul class="anomaly-list">
+                        <li class="anomaly-item"><span class="anomaly-icon"
+                                style="background:#10b981"></span><span><strong>NORM</strong> — Normal ECG</span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"
+                                style="background:#ef4444"></span><span><strong>MI</strong> — Myocardial
+                                Infarction</span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"
+                                style="background:#f59e0b"></span><span><strong>CD</strong> — Conduction Disorder</span>
+                        </li>
+                        <li class="anomaly-item"><span class="anomaly-icon"
+                                style="background:#3b82f6"></span><span><strong>STTC</strong> — ST-T Change</span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"
+                                style="background:#8b5cf6"></span><span><strong>HYP</strong> — Hypertrophy</span></li>
+                    </ul>
+                </div>
+                <div class="sidebar-block">
+                    <div class="sidebar-label">TRAINING CONFIG</div>
+                    <ul class="anomaly-list">
+                        <li class="anomaly-item"><span class="anomaly-icon"></span><span>Batch Size:
+                                <strong>32</strong></span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"></span><span>Learning Rate:
+                                <strong>0.001</strong></span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"></span><span>Max Epochs:
+                                <strong>50</strong></span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"></span><span>Early Stop: <strong>10
+                                    patience</strong></span></li>
+                        <li class="anomaly-item"><span class="anomaly-icon"></span><span>Dropout: <strong>0.3 /
+                                    0.5</strong></span></li>
+                    </ul>
+                </div>
+                <div class="sidebar-block">
+                    <div class="sidebar-label">MODEL STATUS</div>
+                    <div class="human-readable-text" id="system-model-status">Checking...</div>
+                </div>
+            </aside>
+        </section>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         DISEASE DETAIL OVERLAY
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="disease-detail" id="disease-detail" style="display: none;">
+        <div class="results-topbar">
+            <button class="back-link" id="disease-back-btn">← BACK TO RESULTS</button>
+            <span class="record-badge" id="disease-badge">CONDITION INFO</span>
+        </div>
+
+        <!-- Disease Hero Banner -->
+        <section class="disease-hero" id="disease-hero">
+            <div class="disease-hero-content">
+                <div class="disease-hero-text">
+                    <div class="diag-label">CONDITION DETECTED</div>
+                    <h2 class="disease-hero-title" id="disease-title">—</h2>
+                    <p class="disease-hero-subtitle" id="disease-subtitle">—</p>
+                </div>
+                <div class="disease-hero-image">
+                    <img id="disease-image" src="" alt="Condition Illustration">
+                </div>
+            </div>
+        </section>
+
+        <!-- Disease Info Grid -->
+        <section class="disease-grid">
+            <div class="disease-card" id="disease-overview-card">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">01</span>
+                    <span class="disease-card-label">OVERVIEW</span>
+                </div>
+                <p class="disease-card-text" id="disease-overview">—</p>
+            </div>
+            <div class="disease-card" id="disease-causes-card">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">02</span>
+                    <span class="disease-card-label">CAUSES & RISK FACTORS</span>
+                </div>
+                <ul class="disease-card-list" id="disease-causes"></ul>
+            </div>
+            <div class="disease-card" id="disease-symptoms-card">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">03</span>
+                    <span class="disease-card-label">SYMPTOMS</span>
+                </div>
+                <ul class="disease-card-list" id="disease-symptoms"></ul>
+            </div>
+            <div class="disease-card" id="disease-ecg-card">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">04</span>
+                    <span class="disease-card-label">ECG CHARACTERISTICS</span>
+                </div>
+                <ul class="disease-card-list" id="disease-ecg-signs"></ul>
+            </div>
+        </section>
+
+        <!-- Treatment & Prognosis -->
+        <section class="disease-treatment-section">
+            <div class="disease-treatment-main">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">05</span>
+                    <span class="disease-card-label">TREATMENT & MANAGEMENT</span>
+                </div>
+                <ul class="disease-card-list" id="disease-treatment"></ul>
+            </div>
+            <div class="disease-treatment-side">
+                <div class="disease-card-header">
+                    <span class="disease-card-num">06</span>
+                    <span class="disease-card-label">CLINICAL NOTE</span>
+                </div>
+                <div class="human-readable-text" id="disease-clinical-note">—</div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Loader Overlay -->
+    <div class="loader-overlay hidden" id="loader-overlay">
+        <div class="loader-inner">
+            <div class="loader-scanlines"></div>
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <div class="loader-text">PROCESSING SIGNAL...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

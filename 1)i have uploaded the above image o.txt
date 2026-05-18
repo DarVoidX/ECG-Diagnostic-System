@@ -1,0 +1,12 @@
+1)i have uploaded the above image of ecg project pipeline and dataset  (note:"you are world best prompt engineer ")
+2)check all the image with detail 
+3)after checking, understand how my project work then create a perfect prompt to cretae my project for antigravti agent gemeni 3 pro ,itsis integrated with {'stich'- (ui-ux desig with best transition animation and profeesional looks creation)and 'testspite'-(to test frontend and backend)}
+4)first data preprocessing as in image methods ,then train and test dataset folder using that train our model then test using it   
+5)create a ideia like how should my frontend looks with wide features and disaplay outpout preoperly then install required libraries and extentntions for my project you only , best ui grpahics with modern trastion animation then make idea like i have to upload test data on frontend then it show result this is it                                                                             
+6) reaserch try not to make mistake then work on my project                                           
+to run proj --python -m http.server 8000
+or npx serve
+for backend cd ..
+pip install -r requirements.txt
+cd backend
+python app.py

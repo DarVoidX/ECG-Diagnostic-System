@@ -1,0 +1,82 @@
+{
+  "accuracy": 66.83,
+  "precision": 55.11,
+  "recall": 54.76,
+  "f1_score": 54.8,
+  "class_names": [
+    "Normal ECG",
+    "Myocardial Infarction (MI)",
+    "Conduction Disturbance (CD)",
+    "ST/T Change (STTC)",
+    "Hypertrophy (HYP)"
+  ],
+  "per_class": {
+    "Normal ECG": {
+      "precision": 79.87,
+      "recall": 78.88,
+      "f1_score": 79.38,
+      "support": 161
+    },
+    "Myocardial Infarction (MI)": {
+      "precision": 68.14,
+      "recall": 65.25,
+      "f1_score": 66.67,
+      "support": 118
+    },
+    "Conduction Disturbance (CD)": {
+      "precision": 61.7,
+      "recall": 58.0,
+      "f1_score": 59.79,
+      "support": 50
+    },
+    "ST/T Change (STTC)": {
+      "precision": 45.83,
+      "recall": 55.0,
+      "f1_score": 50.0,
+      "support": 60
+    },
+    "Hypertrophy (HYP)": {
+      "precision": 20.0,
+      "recall": 16.67,
+      "f1_score": 18.18,
+      "support": 12
+    }
+  },
+  "confusion_matrix": [
+    [
+      127,
+      9,
+      4,
+      15,
+      6
+    ],
+    [
+      8,
+      77,
+      11,
+      22,
+      0
+    ],
+    [
+      5,
+      13,
+      29,
+      2,
+      1
+    ],
+    [
+      12,
+      14,
+      0,
+      33,
+      1
+    ],
+    [
+      7,
+      0,
+      3,
+      0,
+      2
+    ]
+  ]
+}
